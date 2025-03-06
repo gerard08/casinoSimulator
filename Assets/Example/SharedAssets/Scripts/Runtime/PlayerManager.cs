@@ -22,6 +22,8 @@ public class PlayerManager : MonoBehaviour
     private float m_TimeIdle;
     private CinemachineCamera m_VirtualCamera;
     private bool m_HasFocus;
+
+
     
     void Start()
     {
@@ -41,6 +43,7 @@ public class PlayerManager : MonoBehaviour
         if (SystemInfo.deviceType == DeviceType.Handheld)
         {
             m_TouchInputCanvas.SetActive(true);
+            
         }
 
         m_VirtualCamera = GetComponentInChildren<CinemachineCamera>();
@@ -52,6 +55,7 @@ public class PlayerManager : MonoBehaviour
         {
             m_TimeIdle = 0;
             EnableFlythrough();
+            Debug.Log("enter");
         }
         #if UNITY_EDITOR
         if(m_HasFocus) m_TimeIdle += Time.unscaledDeltaTime;
