@@ -5,12 +5,11 @@ public class OutlineGenerator : MonoBehaviour, IInteractable
     [SerializeField] 
     Material materialToUse;
 
-    private float scale = 1.05f;
-    public void Interact(Material mat) {
+    private float scale = 0.03f;
+    public void Interact() {
 
-        MeshRenderer materialToUse = GetComponent<MeshRenderer>();
-        materialToUse.materials[1] = mat;
-        materialToUse.materials[1].SetFloat("_Scale", scale);
+        materialToUse = GetComponent<MeshRenderer>().materials[1];
+        materialToUse.SetFloat("_Outline_Thickness", scale);
     }
 
     public void setter() {

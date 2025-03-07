@@ -5,7 +5,7 @@ using UnityEngine.UI;
 #endif
 
 interface IInteractable{
-	public void Interact(outline);
+	public void Interact();
 }
 
 namespace StarterAssets
@@ -72,7 +72,6 @@ namespace StarterAssets
 		//Raycast//
 		public Transform InteractorSource;
 		public float InteractRange;
-		public Material outline;
 	
 #if ENABLE_INPUT_SYSTEM
 		private PlayerInput _playerInput;
@@ -126,7 +125,7 @@ namespace StarterAssets
         {
             if(hitInfo.collider.tag == "Interacteable" && hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactObj))
             {
-                interactObj.Interact(outline);
+                interactObj.Interact();
             }
                 
         }
