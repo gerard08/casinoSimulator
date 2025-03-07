@@ -16,7 +16,7 @@ TagManager:
   - Temp_Post
   - Water
   - UI
-  - Terminal
+  - Outlined Objects
   - Location
   - LookInteractor
   - Screen
@@ -24,8 +24,8 @@ TagManager:
   - Camera
   - MainCameraOnly
   - Oasis_TerrainBake
-  - Outlined Objects
   - 
+  - Terminal
   - 
   - 
   - 

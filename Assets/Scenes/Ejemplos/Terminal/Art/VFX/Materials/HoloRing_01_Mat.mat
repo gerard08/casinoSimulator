@@ -8,8 +8,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: HoloRing_01_Mat
-  m_Shader: {fileID: -6465566751694194690, guid: f3e7c7efad4bb42478d8d9dc026a5c6b, type: 3}
-  m_Parent: {fileID: -876546973899608171, guid: f3e7c7efad4bb42478d8d9dc026a5c6b, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: f3377f3ddc4c2456799b163adce969b3, type: 3}
+  m_Parent: {fileID: 2100000, guid: 1d7de0b34bbc44b81b1a26eb0d5e474a, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
