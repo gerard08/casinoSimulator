@@ -2,12 +2,13 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags:
   - MainLight
   - CinemachineTarget
   - ScreenCamera
   - cockpit_capitalLaser
+  - Interacteable
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - Temp_Post
   - Water
   - UI
-  - Terminal
+  - Outlined Objects
   - Location
   - LookInteractor
   - Screen
@@ -24,7 +25,7 @@ TagManager:
   - MainCameraOnly
   - Oasis_TerrainBake
   - 
-  - 
+  - Terminal
   - 
   - 
   - 
@@ -49,32 +50,3 @@ TagManager:
   - Default
   - Screen
   - Lamps
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
