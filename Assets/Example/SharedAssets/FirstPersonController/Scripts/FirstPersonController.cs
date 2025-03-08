@@ -4,9 +4,6 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 #endif
 
-interface IInteractable{
-	public void Interact();
-}
 
 namespace StarterAssets
 {
@@ -69,9 +66,7 @@ namespace StarterAssets
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
 
-		//Raycast//
-		public Transform InteractorSource;
-		public float InteractRange;
+
 	
 #if ENABLE_INPUT_SYSTEM
 		private PlayerInput _playerInput;
@@ -120,16 +115,6 @@ namespace StarterAssets
 
 		private void Update()
 		{
-        Ray r = new Ray(InteractorSource.position, InteractorSource.forward);
-        if(Physics.Raycast(r, out RaycastHit hitInfo, InteractRange))
-        {
-            if(hitInfo.collider.tag == "Interacteable" && hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactObj))
-            {
-                interactObj.Interact();
-            }
-                
-        }
-
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
