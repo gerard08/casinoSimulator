@@ -1,30 +1,62 @@
 using UnityEngine;
 
-public class OutlineGenerator : MonoBehaviour, IInteractable
+public class OutlineGenerator : ObjectManager, IInteractable
 {
+    //Components Object//
+    public BoxCollider boxCollider;
+    public Rigidbody rb;
+
+
     //Outline//
     [SerializeField] 
-    Material materialToUse;
+    Material outline;
 
     private float scale = 0.03f;
     private float Noscale = 0.0f;
 
     //ObjectTake//
-    [SerializeField]
-    private bool objTaken;
+
+
+
     private void Start()
     {
-        materialToUse = GetComponent<MeshRenderer>().materials[1];
+        outline = GetComponent<MeshRenderer>().materials[1];
+
+        boxCollider = GetComponent<BoxCollider>();
+
+        rb = GetComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.None;
+
+        state = ObjectState.NoTaked;
     }
 
-    public void Outline() {
+    public override void Outline() {
 
-        materialToUse.SetFloat("_Outline_Thickness", scale);
+        outline.SetFloat("_Outline_Thickness", scale);
     }
 
-    public void NotOutline()
+    public override void NotOutline()
     {
 
-        materialToUse.SetFloat("_Outline_Thickness", Noscale);
+        outline.SetFloat("_Outline_Thickness", Noscale);
     }
+
+    public override void ObjectNoTaked()
+    {
+        boxCollider.enabled = true;
+        rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.None;
+        outline.SetFloat("_Outline_Thickness", 0.01f);
+        state = ObjectState.NoTaked;
+    }
+
+    public override void ObjectTaked()
+    {
+        boxCollider.enabled = false;
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+        state = ObjectState.Taked;
+    }
+
+    public override bool IsTaked() {  return state == ObjectState.Taked; }
+
 }

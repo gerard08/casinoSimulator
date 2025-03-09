@@ -7,6 +7,11 @@ interface IInteractable
 {
     public void Outline();
     public void NotOutline();
+
+    public void ObjectTaked();
+    public void ObjectNoTaked();
+
+    bool IsTaked();
 }
 
 
@@ -36,15 +41,16 @@ public class MouseManager : MonoBehaviour
     {
         RaycastHit hit;
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-        if (Physics.Raycast(ray, out hit, distanceMax, LayerMask.NameToLayer("NoInteractable")))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.NameToLayer("NoInteractable")))
         {
-            if (hit.collider.tag == "Interacteable" && hit.collider.gameObject.TryGetComponent(out IInteractable prob))
+            if (hit.collider.tag == "Interacteable" && hit.collider.gameObject.TryGetComponent(out IInteractable prob) && !objectSelect)
             {
+                Debug.Log("enter1");
                 interactObj = prob;
                 interactObj.Outline();
                 if (Input.GetMouseButtonDown(0))
                 {
-                    Debug.Log("Enter1");
+                    Debug.Log("enter2");
                     string _tag = hit.collider.tag;
                     objectHand = hit.collider.gameObject;
                     SwitchList(objectHand, _tag);
@@ -58,6 +64,12 @@ public class MouseManager : MonoBehaviour
             if (objectSelect)
             {
                 ObjectMove();
+                if (Input.GetMouseButtonDown(0))
+                {
+                    string _tag = hit.collider.tag;
+                    objectHand = hit.collider.gameObject;
+                    SwitchList(objectHand, _tag);
+                }
             }
         }
 
@@ -71,21 +83,26 @@ public class MouseManager : MonoBehaviour
     }
     void SwitchList(GameObject _object, string _tag)
     {
-        Debug.Log("Enter2");
         switch (_tag)
         {
-            case "Interactable":
+            case "Interacteable":
                 if (!objectSelect)
                 {
                     interactObj.NotOutline();
+                    interactObj.ObjectTaked();
                     objectSelect = true;
                 }
                 break;
             default:
-                if (!objectSelect)
+                if (objectSelect)
                 {
-                    interactObj.NotOutline();
-                    objectSelect = true;
+                    if(interactObj.IsTaked())
+                    {
+                        objectHand.transform.position = new Vector3(objectHand.transform.position.x, objectHand.transform.position.y, objectHand.transform.position.z);
+                        interactObj.ObjectNoTaked();
+                        objectSelect = false;
+                        objectHand = null;
+                    }
                 }
                 break;
         }
