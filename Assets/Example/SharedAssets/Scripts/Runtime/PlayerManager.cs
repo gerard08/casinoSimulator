@@ -4,11 +4,12 @@ using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using Benchmarking;
 using UnityEngine.EventSystems;
+using Unity.Netcode;
 
 /// <summary>
 /// This class will enable the touch input canvas on handheld devices and will trigger the camera flythrough if the player is idle
 /// </summary>
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : NetworkBehaviour
 {
     [SerializeField] private bool m_FlythroughWhenIdle;
     [SerializeField] private float m_IdleTransitionTime;
@@ -47,6 +48,14 @@ public class PlayerManager : MonoBehaviour
         }
 
         m_VirtualCamera = GetComponentInChildren<CinemachineCamera>();
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner)
+        {
+            Destroy(this);
+        }
     }
 
     void Update()
