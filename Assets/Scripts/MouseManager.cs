@@ -39,9 +39,19 @@ public class MouseManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckRayCast();
+        if (objectSelect)
+            distanceMax = Mathf.Infinity;
+        else
+            distanceMax = 5;
+
+    }
+
+    void CheckRayCast()
+    {
         RaycastHit hit;
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.NameToLayer("NoInteractable")))
+        if (Physics.Raycast(ray, out hit, distanceMax, LayerMask.NameToLayer("NoInteractable")))
         {
             if (hit.collider.tag == "Interacteable" && hit.collider.gameObject.TryGetComponent(out IInteractable prob) && !objectSelect)
             {
@@ -72,8 +82,6 @@ public class MouseManager : MonoBehaviour
                 }
             }
         }
-
-   
     }
 
     void ObjectMove()
