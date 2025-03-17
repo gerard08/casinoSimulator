@@ -14,8 +14,8 @@ public class OutlineGenerator : ObjectManager, IInteractable
     private float scale = 0.03f;
     private float Noscale = 0.0f;
 
-    //ObjectTake//
-
+    //network//
+    Transform positionX;
 
 
     private void Start()
@@ -58,5 +58,11 @@ public class OutlineGenerator : ObjectManager, IInteractable
     }
 
     public override bool IsTaked() {  return state == ObjectState.Taked; }
+
+    public Vector3 objectHost()
+    {
+        Vector3 vector3 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        return vector3;
+    }
 
 }

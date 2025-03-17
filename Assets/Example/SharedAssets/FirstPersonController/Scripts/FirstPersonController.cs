@@ -118,9 +118,24 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+			Tablet();
 		}
 
-		private void LateUpdate()
+
+		private void Tablet()
+        {
+            if (_input.tablet)
+            {
+				_input.cursorLocked = false;
+				_input.cursorInputForLook = false;
+            }
+            else if (!_input.tablet)
+            {
+                _input.cursorLocked = true;
+                _input.cursorInputForLook = true;
+            }
+        }
+        private void LateUpdate()
 		{
 			CameraRotation();
 		}
@@ -135,7 +150,7 @@ namespace StarterAssets
 		private void CameraRotation()
 		{
 			// if there is an input
-			if (_input.look.sqrMagnitude >= _threshold)
+			if (_input.look.sqrMagnitude >= _threshold && !_input.tablet)
 			{
 				//Don't multiply mouse input by Time.deltaTime
 				float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;

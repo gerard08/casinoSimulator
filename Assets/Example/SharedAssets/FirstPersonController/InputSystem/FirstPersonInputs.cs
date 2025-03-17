@@ -2,6 +2,7 @@ using Benchmarking;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 #endif
 
 namespace StarterAssets
@@ -13,8 +14,16 @@ namespace StarterAssets
 		public Vector2 look;
 		public bool jump;
 		public bool sprint;
+        [SerializeField]
+        public bool tablet { get; private set; }
 
-		[Header("Movement Settings")]
+		private InputAction _tabletOpenCloseAction;
+
+#if ENABLE_INPUT_SYSTEM
+        private PlayerInput _playerInput;
+#endif
+
+        [Header("Movement Settings")]
 		public bool analogMovement;
 
 		[Header("Mouse Cursor Settings")]
@@ -24,13 +33,17 @@ namespace StarterAssets
 		public PlayerManager CameraManager;
 		
 		private bool m_IgnoreInput;
-		
 
-		private static bool m_FocusActionsSetUp;
+        public GameObject TabletPanel;
+
+        private static bool m_FocusActionsSetUp;
 
 		private void Start()
 		{
-			if (!m_FocusActionsSetUp)
+			_playerInput = GetComponent<PlayerInput>();
+			_tabletOpenCloseAction = _playerInput.actions["Tablet"];
+
+            if (!m_FocusActionsSetUp)
 			{
 #if UNITY_EDITOR
 				var ignoreInput = new InputAction(binding: "/Keyboard/escape");
@@ -98,8 +111,19 @@ namespace StarterAssets
 			}
 			JumpInput(value.isPressed);
 		}
-
-		public void OnSprint(InputValue value)
+		public void OnTablet(InputValue value)
+		{
+			if (CameraManager != null)
+			{
+                CameraManager.NotifyPlayerMoved();
+            }
+			if(value.isPressed)
+			{
+                tablet = !tablet;
+                TabletInput(tablet);
+            }
+        }
+        public void OnSprint(InputValue value)
 		{
 			if (CameraManager != null)
 			{
@@ -129,8 +153,15 @@ namespace StarterAssets
 		{
 			sprint = newSprintState;
 		}
-		
-		private void OnApplicationFocus(bool hasFocus)
+
+        public void TabletInput(bool newSprintState)
+        {
+			Debug.Log(newSprintState);
+			SetCursorState(!newSprintState);
+            tablet = newSprintState;
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);
 			m_IgnoreInput = !hasFocus;
