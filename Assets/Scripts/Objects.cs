@@ -17,6 +17,8 @@ public class OutlineGenerator : ObjectManager, IInteractable
     //network//
     Transform positionX;
 
+    //GameManager//
+    bool isPlaying;
 
     private void Start()
     {
@@ -27,9 +29,22 @@ public class OutlineGenerator : ObjectManager, IInteractable
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.None;
 
-        state = ObjectState.NoTaked;
+        stateObject = ObjectState.NoTaked;
+    }
+    void Awake()
+    {
+        GameManager.StateChanged += GameManager_StateChanged;
     }
 
+    void OnDestroy() //Buena practis quitar el evento del buffer 
+    {
+        GameManager.StateChanged -= GameManager_StateChanged;
+    }
+
+    private void GameManager_StateChanged(GameState state)
+    {
+        if(state != GameState.Play) { stateObject = ObjectState.NoTaked;}
+    }
     public override void Outline() {
 
         outline.SetFloat("_Outline_Thickness", scale);
@@ -43,10 +58,12 @@ public class OutlineGenerator : ObjectManager, IInteractable
 
     public override void ObjectNoTaked()
     {
+
         boxCollider.enabled = true;
         rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.None;
         outline.SetFloat("_Outline_Thickness", 0.01f);
-        state = ObjectState.NoTaked;
+        stateObject = ObjectState.NoTaked;
+        
     }
 
     public override void ObjectTaked()
@@ -54,10 +71,10 @@ public class OutlineGenerator : ObjectManager, IInteractable
         boxCollider.enabled = false;
         transform.rotation = Quaternion.Euler(0, 0, 0);
         rb.constraints = RigidbodyConstraints.FreezeAll;
-        state = ObjectState.Taked;
+        stateObject = ObjectState.Taked;
     }
 
-    public override bool IsTaked() {  return state == ObjectState.Taked; }
+    public override bool IsTaked() {  return stateObject == ObjectState.Taked; }
 
     public Vector3 objectHost()
     {

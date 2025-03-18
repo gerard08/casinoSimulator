@@ -10,18 +10,18 @@ public class TabletManager : MonoBehaviour
 
     public static bool GameIsPaused = false;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Update()
+    void Awake()
     {
-
-            //Tablet();
-       
-    }
-    // Update is called once per frame
-    public void Tablet()
-    {
-        TabletPanel.SetActive(GameIsPaused = GameIsPaused ? false : true);
+        GameManager.StateChanged += GameManager_StateChanged;   
     }
 
+    void OnDestroy() //Buena practis quitar el evento del buffer 
+    {
+        GameManager.StateChanged -= GameManager_StateChanged;
+    }
 
+    private void GameManager_StateChanged(GameState state)
+    {
+        TabletPanel.SetActive(state == GameState.Tablet);
+    }
 }

@@ -128,11 +128,15 @@ namespace StarterAssets
             {
 				_input.cursorLocked = false;
 				_input.cursorInputForLook = false;
+
+				GameManager.instance.UpdateGameState(GameState.Tablet);
             }
             else if (!_input.tablet)
             {
                 _input.cursorLocked = true;
                 _input.cursorInputForLook = true;
+
+                GameManager.instance.UpdateGameState(GameState.Play);
             }
         }
         private void LateUpdate()

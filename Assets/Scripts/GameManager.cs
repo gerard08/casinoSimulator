@@ -1,35 +1,53 @@
+using System;
 using UnityEngine;
+
+public enum GameState
+{
+    Menu,
+    Play,
+    Tablet,
+    Exit
+}
 
 public class GameManager : MonoBehaviour
 {
-     enum states
+    GameState State;
+
+    public static GameManager instance;
+
+    public static event Action<GameState> StateChanged; 
+
+    void Awake()
     {
-        MENU,
-        PLAY,
-        EXIT
+        instance = this;
     }
-
-    states state;
-
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        state = states.MENU;
+        UpdateGameState(GameState.Play);
     }
 
     // Update is called once per frame
-    void Update()
+    public void UpdateGameState(GameState newState)
     {
-        switch (state)
-        {
-            case states.MENU:
-                enabled = true; break;
-            case states.EXIT: 
-                enabled = false; break; 
-            case states.PLAY:
-                enabled = true; break;
-            default: break;
-        }
+        State = newState;
+
+        switch (newState) {
+            case GameState.Menu:
+                break;
+            case GameState.Play:
+                Debug.Log("State Play");
+                break;
+            case GameState.Tablet:
+                Debug.Log("State Tablet");
+                break;
+            case GameState.Exit:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
+       }
+
+        StateChanged?.Invoke(newState);
+
     }
 }

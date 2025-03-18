@@ -33,26 +33,36 @@ namespace StarterAssets
         private GameObject objectHand; //obj que esta en la mano
         public GameObject poisitionHand; //posicion donde estara el objeto
 
-        public StarterAssetsInputs _input;
 
-        void Start()
+        //Manager//
+        private bool isPlaying;
+
+        void Awake()
         {
+            GameManager.StateChanged += GameManager_StateChanged;
             mainCamera = Camera.main;
-
         }
 
-        // Update is called once per frame
+        void OnDestroy() //Buena practis quitar el evento del buffer 
+        {
+            GameManager.StateChanged -= GameManager_StateChanged;
+        }
+
+        private void GameManager_StateChanged(GameState state)
+        {
+            isPlaying = state == GameState.Play;
+            if(objectHand == true && state != GameState.Play){ throwObject(); }
+        }
         void Update()
         {
-           
+            if (isPlaying)
+            {
                 CheckRayCast();
                 if (objectSelect)
                     distanceMax = Mathf.Infinity;
                 else
                     distanceMax = 5;
-            
-
-
+            }
         }
 
         void CheckRayCast()
@@ -71,7 +81,7 @@ namespace StarterAssets
                         Debug.Log("enter2");
                         string _tag = hit.collider.tag;
                         objectHand = hit.collider.gameObject;
-                        SwitchList(objectHand, _tag);
+                        SwitchList(_tag);
                     }
                 }
                 else if ((hit.collider.tag != "Interactable" && interactObj != null))
@@ -86,7 +96,7 @@ namespace StarterAssets
                     {
                         string _tag = hit.collider.tag;
                         objectHand = hit.collider.gameObject;
-                        SwitchList(objectHand, _tag);
+                        SwitchList(_tag);
                     }
                 }
             }
@@ -97,7 +107,7 @@ namespace StarterAssets
             Vector3 newPosition2 = Vector3.Lerp(objectHand.transform.position, poisitionHand.transform.position, Time.deltaTime * 50);
             objectHand.transform.position = newPosition2;
         }
-        void SwitchList(GameObject _object, string _tag)
+        void SwitchList(string _tag)
         {
             switch (_tag)
             {
@@ -114,14 +124,18 @@ namespace StarterAssets
                     {
                         if (interactObj.IsTaked())
                         {
-                            objectHand.transform.position = new Vector3(objectHand.transform.position.x, objectHand.transform.position.y, objectHand.transform.position.z);
-                            interactObj.ObjectNoTaked();
-                            objectSelect = false;
-                            objectHand = null;
+                            throwObject();                         
                         }
                     }
                     break;
             }
+        }
+
+        void throwObject()
+        {
+            interactObj.ObjectNoTaked();
+            objectSelect = false;
+            objectHand = null;
         }
     }
 }

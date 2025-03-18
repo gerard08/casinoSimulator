@@ -12,7 +12,7 @@ public class ObjectManager : MonoBehaviour
     [SerializeField]
     protected int id;
     [SerializeField]
-    public ObjectState state;
+    public ObjectState stateObject;
     [SerializeField]
     public bool objTaken;
 
@@ -21,5 +21,5 @@ public class ObjectManager : MonoBehaviour
     public virtual void ObjectTaked() {    }
     public virtual void Outline() {    }
     public virtual void NotOutline() {    }
-    public virtual bool IsTaked() { return state == ObjectState.Taked; ; }
+    public virtual bool IsTaked() { return stateObject == ObjectState.Taked; ; }
 }
