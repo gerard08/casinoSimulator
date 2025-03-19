@@ -24,4 +24,18 @@ public class TabletManager : MonoBehaviour
     {
         TabletPanel.SetActive(state == GameState.Tablet);
     }
+
+    public void spawnObject1()
+    {
+        ObjectManager.Instance.SpawnObjects(1);
+        GameManager.Instance.UpdateGameState(GameState.Play);
+
+    }
+
+    public void spawnObject2()
+    {
+        ObjectManager.Instance.SpawnObjects(2);
+        GameManager.Instance.UpdateGameState(GameState.Play);
+
+    }
 }

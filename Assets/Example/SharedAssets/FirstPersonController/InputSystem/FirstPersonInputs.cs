@@ -156,7 +156,6 @@ namespace StarterAssets
 
         public void TabletInput(bool newSprintState)
         {
-			Debug.Log(newSprintState);
 			SetCursorState(!newSprintState);
             tablet = newSprintState;
         }

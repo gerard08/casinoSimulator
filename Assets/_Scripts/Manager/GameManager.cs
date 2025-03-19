@@ -1,35 +1,23 @@
 using System;
 using UnityEngine;
 
-public enum GameState
+public class GameManager : Singleton<GameManager>
 {
-    Menu,
-    Play,
-    Tablet,
-    Exit
-}
+    public GameState State {  get; private set; }   
 
-public class GameManager : MonoBehaviour
-{
-    GameState State;
+    //public static GameManager instance;
 
-    public static GameManager instance;
+    //Ideas hacer 2 eventos uno antes de cambiar el state y otro despues de cambiar el state
+    public static event Action<GameState> StateChanged;
 
-    public static event Action<GameState> StateChanged; 
+    void Start() => UpdateGameState(GameState.Play); //Solo al iniciar se actualiza el state
 
-    void Awake()
-    {
-        instance = this;
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        UpdateGameState(GameState.Play);
-    }
 
     // Update is called once per frame
     public void UpdateGameState(GameState newState)
-    {
+    {   
+        if(State == newState)  return;
+
         State = newState;
 
         switch (newState) {
@@ -50,4 +38,13 @@ public class GameManager : MonoBehaviour
         StateChanged?.Invoke(newState);
 
     }
+}
+
+[Serializable]
+public enum GameState
+{
+    Menu,
+    Play,
+    Tablet,
+    Exit
 }

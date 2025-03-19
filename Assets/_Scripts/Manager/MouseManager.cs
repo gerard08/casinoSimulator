@@ -73,12 +73,10 @@ namespace StarterAssets
             {
                 if (hit.collider.tag == "Interacteable" && hit.collider.gameObject.TryGetComponent(out IInteractable prob) && !objectSelect)
                 {
-                    Debug.Log("enter1");
                     interactObj = prob;
                     interactObj.Outline();
                     if (Input.GetMouseButtonDown(0))
                     {
-                        Debug.Log("enter2");
                         string _tag = hit.collider.tag;
                         objectHand = hit.collider.gameObject;
                         SwitchList(_tag);

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 493750bddecfe8b4a962b967ee4461ed, type: 3}
+  m_Name: capsula
+  m_EditorClassIdentifier: 
+  stateObject: 0
+  _stats:
+    id: 1
+    price: 20
+  prefab: {fileID: 2103320967868182934, guid: b04a40c5dbc6381448900a4247a8e8be, type: 3}
+  Description: 
+  MenuSprite: {fileID: 0}

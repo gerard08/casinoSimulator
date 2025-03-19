@@ -1,15 +1,13 @@
 using UnityEngine;
 
-public class OutlineGenerator : ObjectManager, IInteractable
+public class Objects : ObjectsBase, IInteractable
 {
     //Components Object//
-    public BoxCollider boxCollider;
-    public Rigidbody rb;
-
+    private BoxCollider boxCollider;
+    private Rigidbody rb;
 
     //Outline//
-    [SerializeField] 
-    Material outline;
+    private Material outline;
 
     private float scale = 0.03f;
     private float Noscale = 0.0f;
@@ -29,7 +27,7 @@ public class OutlineGenerator : ObjectManager, IInteractable
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.None;
 
-        stateObject = ObjectState.NoTaked;
+        //stateObject = ObjectState.NoTaked;
     }
     void Awake()
     {
@@ -43,7 +41,8 @@ public class OutlineGenerator : ObjectManager, IInteractable
 
     private void GameManager_StateChanged(GameState state)
     {
-        if(state != GameState.Play) { stateObject = ObjectState.NoTaked;}
+        if(state != GameState.Play) { //stateObject = ObjectState.NoTaked
+                                      ;}
     }
     public override void Outline() {
 
@@ -62,8 +61,8 @@ public class OutlineGenerator : ObjectManager, IInteractable
         boxCollider.enabled = true;
         rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.None;
         outline.SetFloat("_Outline_Thickness", 0.01f);
-        stateObject = ObjectState.NoTaked;
-        
+        SetObjectState(ObjectState.NoTaked);
+
     }
 
     public override void ObjectTaked()
@@ -71,10 +70,10 @@ public class OutlineGenerator : ObjectManager, IInteractable
         boxCollider.enabled = false;
         transform.rotation = Quaternion.Euler(0, 0, 0);
         rb.constraints = RigidbodyConstraints.FreezeAll;
-        stateObject = ObjectState.Taked;
-    }
+        SetObjectState(ObjectState.Taked);
+        Debug.Log(_objectState);
 
-    public override bool IsTaked() {  return stateObject == ObjectState.Taked; }
+    }
 
     public Vector3 objectHost()
     {

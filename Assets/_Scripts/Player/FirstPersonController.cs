@@ -66,6 +66,8 @@ namespace StarterAssets
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
 
+		//GameManager
+		GameManager gameManager;
 
 	
 #if ENABLE_INPUT_SYSTEM
@@ -129,15 +131,16 @@ namespace StarterAssets
 				_input.cursorLocked = false;
 				_input.cursorInputForLook = false;
 
-				GameManager.instance.UpdateGameState(GameState.Tablet);
+                GameManager.Instance.UpdateGameState(GameState.Tablet);
             }
             else if (!_input.tablet)
             {
                 _input.cursorLocked = true;
                 _input.cursorInputForLook = true;
 
-                GameManager.instance.UpdateGameState(GameState.Play);
+                GameManager.Instance.UpdateGameState(GameState.Play);
             }
+
         }
         private void LateUpdate()
 		{
