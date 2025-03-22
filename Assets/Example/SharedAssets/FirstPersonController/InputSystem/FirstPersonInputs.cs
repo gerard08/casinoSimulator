@@ -66,11 +66,21 @@ namespace StarterAssets
 		private void OnDestroy()
 		{
 			m_FocusActionsSetUp = false;
-		}
+            GameManager.StateChanged -= GameManager_StateChanged;
+        }
 
+        void Awake()
+        {
+            GameManager.StateChanged += GameManager_StateChanged;
+        }
+
+        private void GameManager_StateChanged(GameState state)
+        {
+			if (tablet && state != GameState.Tablet) { tablet = !tablet; TabletInput(tablet); }
+        }
 
 #if ENABLE_INPUT_SYSTEM
-		public void OnMove(InputValue value)
+        public void OnMove(InputValue value)
 		{
 			if (m_IgnoreInput)
 			{

@@ -27,7 +27,7 @@ public class Objects : ObjectsBase, IInteractable
         rb = GetComponent<Rigidbody>();
 
         if (_objectType == ObjectType.Environment) {rb.constraints = RigidbodyConstraints.FreezeAll; }
-        else if (_objectType == ObjectType.Interactuable) { rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.None; }
+        else if (_objectType == ObjectType.Interactuable || _objectType == ObjectType.Builder) { rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.None; }
 
         //stateObject = ObjectState.NoTaked;
     }
@@ -64,7 +64,7 @@ public class Objects : ObjectsBase, IInteractable
         rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.None;
         outline.SetFloat("_Outline_Thickness", 0.01f);
         SetObjectState(ObjectState.NoTaked);
-
+        Debug.Log(_objectState);
     }
 
     public override void ObjectTaked()

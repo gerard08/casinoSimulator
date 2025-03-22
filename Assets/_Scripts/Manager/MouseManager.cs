@@ -24,8 +24,8 @@ namespace StarterAssets
         //Raycast//
         public Camera mainCamera;
         float distanceMax = 5; //Distancia del Raycast al impactar un objeto
-        [SerializeField]
-        private IInteractable interactObj;
+
+        [SerializeField] private IInteractable interactObj;
 
         //TakeObj//
         public bool objectSelect; //bool para saber si hay algun objeto en la mano
@@ -35,12 +35,15 @@ namespace StarterAssets
 
 
         //Manager//
-        private bool isPlaying;
+        private GameState gameState;
 
+        //Builder
+        Vector3 lastPositiom;
         void Awake()
         {
             GameManager.StateChanged += GameManager_StateChanged;
             mainCamera = Camera.main;
+
         }
 
         void OnDestroy() //Buena practis quitar el evento del buffer 
@@ -50,13 +53,14 @@ namespace StarterAssets
 
         private void GameManager_StateChanged(GameState state)
         {
-            isPlaying = state == GameState.Play;
-            if(objectHand == true && state != GameState.Play){ throwObject(); }
+            if (objectHand == true && state != GameState.Play) { throwObject(); }
+            gameState = state;
         }
         void Update()
         {
-            if (isPlaying)
+            if (gameState == GameState.Play || gameState == GameState.Builder)
             {
+                if (objectSelect) { ObjectMove(); }
                 CheckRayCast();
                 if (objectSelect)
                     distanceMax = Mathf.Infinity;
@@ -65,75 +69,74 @@ namespace StarterAssets
             }
         }
 
-        void CheckRayCast()
+        public Vector3 CheckRayCast()
         {
             RaycastHit hit;
-            Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+            Vector3 mousePos = Input.mousePosition;
+            mousePos.z = mainCamera.nearClipPlane;
+            Ray ray = mainCamera.ScreenPointToRay(mousePos);
             if (Physics.Raycast(ray, out hit, distanceMax, LayerMask.NameToLayer("NoInteractable")))
             {
-                if (hit.collider.tag == "Interacteable" && hit.collider.gameObject.TryGetComponent(out IInteractable prob) && !objectSelect)
+                if (objectSelect && Input.GetMouseButtonDown(0))
+                {
+                    if (interactObj.IsTaked())
+                    {
+                        throwObject();
+                    }
+                }
+                if (hit.collider.gameObject.TryGetComponent(out IInteractable prob))
                 {
                     interactObj = prob;
                     interactObj.Outline();
                     if (Input.GetMouseButtonDown(0))
                     {
-                        string _tag = hit.collider.tag;
-                        objectHand = hit.collider.gameObject;
-                        SwitchList(_tag);
+                        SwitchList(hit.collider.tag, hit.point, hit);
                     }
                 }
-                else if ((hit.collider.tag != "Interactable" && interactObj != null))
+                else if (interactObj != null)
                 {
                     interactObj.NotOutline();
                 }
-
-                if (objectSelect)
+                if(gameState == GameState.Builder)
                 {
-                    ObjectMove();
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        string _tag = hit.collider.tag;
-                        objectHand = hit.collider.gameObject;
-                        SwitchList(_tag);
-                    }
+                    lastPositiom = hit.point;
+                    return SwitchList(hit.collider.tag, hit.point, hit);
                 }
             }
+            return new Vector3(0,0,0);//Es null
         }
 
-        void ObjectMove()
-        {
-            Vector3 newPosition2 = Vector3.Lerp(objectHand.transform.position, poisitionHand.transform.position, Time.deltaTime * 50);
-            objectHand.transform.position = newPosition2;
-        }
-        void SwitchList(string _tag)
-        {
-            switch (_tag)
+            void ObjectMove()
             {
-                case "Interacteable":
-                    if (!objectSelect)
-                    {
-                        interactObj.NotOutline();
-                        interactObj.ObjectTaked();
-                        objectSelect = true;
-                    }
-                    break;
-                default:
-                    if (objectSelect)
-                    {
-                        if (interactObj.IsTaked())
-                        {
-                            throwObject();                         
-                        }
-                    }
-                    break;
+                Vector3 newPosition2 = Vector3.Lerp(objectHand.transform.position, poisitionHand.transform.position, Time.deltaTime * 50);
+                objectHand.transform.position = newPosition2;
             }
-        }
 
-        void throwObject()
-        {
-            interactObj.ObjectNoTaked();
-            objectSelect = false;
-            objectHand = null;
-        }
+            public Vector3 SwitchList(string _tag, Vector3 pos, RaycastHit hit)
+            {
+                switch (_tag)
+                {
+                    case "Interacteable":
+                        if (!objectSelect && !interactObj.IsTaked())
+                        {
+                            objectHand = hit.collider.gameObject;
+                            interactObj.NotOutline();
+                            interactObj.ObjectTaked();
+                            objectSelect = true;
+                        }
+                    return pos;
+                case "Terrain":
+                    return pos;
+                default:
+                    return pos;
+                }
+            }
+            void throwObject()
+            {
+                interactObj.ObjectNoTaked();
+                objectSelect = false;
+                objectHand = null;
+                interactObj = null;
+            }
     }
 }

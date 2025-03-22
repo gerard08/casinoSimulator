@@ -67,7 +67,8 @@ namespace StarterAssets
 		private float _fallTimeoutDelta;
 
 		//GameManager
-		GameManager gameManager;
+		//GameManager gameManager;
+		GameState _gameState;
 
 	
 #if ENABLE_INPUT_SYSTEM
@@ -98,9 +99,21 @@ namespace StarterAssets
 			{
 				_mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
 			}
-		}
+            GameManager.StateChanged += GameManager_StateChanged;
 
-		private void Start()
+        }
+
+        private void OnDestroy()
+        {
+            GameManager.StateChanged -= GameManager_StateChanged;
+        }
+
+        private void GameManager_StateChanged(GameState state)
+        {
+            _gameState = state;
+        }
+
+        private void Start()
 		{
 			_controller = GetComponent<CharacterController>();
 			_input = GetComponent<StarterAssetsInputs>();
@@ -137,7 +150,7 @@ namespace StarterAssets
             {
                 _input.cursorLocked = true;
                 _input.cursorInputForLook = true;
-
+				if(_gameState != GameState.Builder)
                 GameManager.Instance.UpdateGameState(GameState.Play);
             }
 

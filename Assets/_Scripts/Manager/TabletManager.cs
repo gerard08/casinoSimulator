@@ -10,6 +10,8 @@ public class TabletManager : MonoBehaviour
 
     public static bool GameIsPaused = false;
 
+    public int id;
+
     void Awake()
     {
         GameManager.StateChanged += GameManager_StateChanged;   
@@ -27,15 +29,15 @@ public class TabletManager : MonoBehaviour
 
     public void spawnObject1()
     {
-        ObjectManager.Instance.SpawnObjects(1);
+        //ObjectManager.Instance.SpawnObjects(1);
+        TabletPanel.SetActive(false);
         GameManager.Instance.UpdateGameState(GameState.Play);
-
     }
 
     public void spawnObject2()
     {
-        ObjectManager.Instance.SpawnObjects(2);
-        GameManager.Instance.UpdateGameState(GameState.Play);
-
+       // ObjectManager.Instance.SpawnObjects(2);
+        TabletPanel.SetActive(false);
+        GameManager.Instance.UpdateGameState(GameState.Builder);
     }
 }

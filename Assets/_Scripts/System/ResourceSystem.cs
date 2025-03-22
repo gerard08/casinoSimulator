@@ -5,7 +5,9 @@ public class ResourceSystem : Singleton<ResourceSystem>
 {
 
     public List<ScripteableObject> scripteableObjects {  get; private set; }
-    private Dictionary<int, ScripteableObject> _ObjectDict;
+    private Dictionary<ObjectType, ScripteableObject> _ObjectType;
+    private Dictionary<int, ScripteableObject> _ObjectID;
+
 
     protected override void Awake()
     {
@@ -16,19 +18,11 @@ public class ResourceSystem : Singleton<ResourceSystem>
     private void AssembleResources()
     {
         scripteableObjects = Resources.LoadAll<ScripteableObject>("Objects").ToList();
-        _ObjectDict = scripteableObjects.ToDictionary(r => r.BaseStats.id, r => r);
-
-      
-        listObjectsID();
+        _ObjectType = scripteableObjects.ToDictionary(r => r.objectType, r => r);
+        _ObjectID = scripteableObjects.ToDictionary(r => r.BaseStats.id, r => r);
     }
 
-    public ScripteableObject GetObject(int t) => _ObjectDict[t];
+    public ScripteableObject GetObject(ObjectType _objectType) => _ObjectType[_objectType];
+    public ObjectType GetObject(int id) => _ObjectID[id].objectType;
 
-    void listObjectsID()
-    {
-        for (int i = 0; i < scripteableObjects.Count; i++) {
-
-            Debug.Log(i);
-        }
-    }
 }

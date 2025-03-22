@@ -10,4 +10,5 @@ public enum ObjectType
 {
     Interactuable,
     Environment,
+    Builder
 };

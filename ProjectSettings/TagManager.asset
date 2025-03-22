@@ -10,6 +10,7 @@ TagManager:
   - cockpit_capitalLaser
   - Interacteable
   - Environment
+  - Terrain
   layers:
   - Default
   - TransparentFX
