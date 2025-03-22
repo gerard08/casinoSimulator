@@ -3,8 +3,8 @@ using UnityEngine;
 public class Objects : ObjectsBase, IInteractable
 {
     //Components Object//
-    private BoxCollider boxCollider;
-    private Rigidbody rb;
+    public BoxCollider boxCollider;
+    public Rigidbody rb;
 
     //Outline//
     private Material outline;
@@ -25,7 +25,9 @@ public class Objects : ObjectsBase, IInteractable
         boxCollider = GetComponent<BoxCollider>();
 
         rb = GetComponent<Rigidbody>();
-        rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.None;
+
+        if (_objectType == ObjectType.Environment) {rb.constraints = RigidbodyConstraints.FreezeAll; }
+        else if (_objectType == ObjectType.Interactuable) { rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.None; }
 
         //stateObject = ObjectState.NoTaked;
     }

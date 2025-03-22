@@ -7,7 +7,7 @@ public class ObjectManager : Singleton<ObjectManager>
     //Aqui se spawnea el objeto a partir de una ID + la posicion
     public void SpawnObjects(int id)
     {
-        SpawnObject(id, new Vector3(1, 0, 0));
+        SpawnObject(id, new Vector3(0, 1, 0));
     }
 
     //Se envia el objeto y se Spawnea
@@ -19,31 +19,18 @@ public class ObjectManager : Singleton<ObjectManager>
 
         var stats = _objectScripteable.BaseStats;
 
+        var statsObject = _objectScripteable.stateObject;
+
+        var statsType = _objectScripteable.objectType;
+
         spawned.SetStats(stats);
+
+        spawned.SetObjectState(statsObject);
+
+        spawned.SetObjectType(statsType);
+
     }
 
 }
 
 
-/*
-public enum ObjectState
-{
-    NoTaked,
-    Taked,
-};
-public class ObjectManager : MonoBehaviour
-{
-   [SerializeField]
-   protected int id;
-   [SerializeField]
-   public ObjectState stateObject;
-   [SerializeField]
-   public bool objTaken;
-
-   // Start is called once before the first execution of Update after the MonoBehaviour is created
-   public virtual void ObjectNoTaked() {    }
-   public virtual void ObjectTaked() {    }
-   public virtual void Outline() {    }
-   public virtual void NotOutline() {    }
-   public virtual bool IsTaked() { return stateObject == ObjectState.Taked; ; }
-}*/

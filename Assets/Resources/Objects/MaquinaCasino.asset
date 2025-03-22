@@ -19,3 +19,4 @@ MonoBehaviour:
   prefab: {fileID: 2103320967868182934, guid: 4523834b3821f8a4383b530e0359eee9, type: 3}
   Description: 
   MenuSprite: {fileID: 0}
+  objectType: 1
