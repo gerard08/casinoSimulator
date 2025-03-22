@@ -23,6 +23,6 @@ public class ResourceSystem : Singleton<ResourceSystem>
     }
 
     public ScripteableObject GetObject(ObjectType _objectType) => _ObjectType[_objectType];
-    public ObjectType GetObject(int id) => _ObjectID[id].objectType;
+    public ScripteableObject GetObject(int id) => _ObjectID[id];
 
 }

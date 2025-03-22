@@ -1,4 +1,5 @@
 using StarterAssets;
+using System.Runtime.Remoting;
 using UnityEngine;
 
 public class PlacementSystem : MonoBehaviour
@@ -30,14 +31,19 @@ public class PlacementSystem : MonoBehaviour
         {
             Vector3 mousePosition = mouseManager.CheckRayCast();
             
-            Vector3Int gridPosition = grid.WorldToCell(mousePosition);
             Debug.Log(mousePosition);
             if(mouseIndicator == null) { mouseIndicator = ObjectManager.Instance.SeacrhObj(); }
             if (mousePosition == null) { mouseIndicator.SetActive(false); }
             else { mouseIndicator.SetActive(true); }
-                mouseIndicator.transform.position = mousePosition;
-            cellIndicator.transform.position = grid.CellToWorld(gridPosition);
+            ObjectMove(mousePosition);
         }
+    }
+    void ObjectMove(Vector3 mousePosition)
+    {
+        Vector3 newPosition2 = Vector3.Lerp(mouseIndicator.transform.position, mousePosition, Time.deltaTime * 50);
+        mouseIndicator.transform.position = newPosition2;
+        Vector3Int gridPosition = grid.WorldToCell(newPosition2);
+        cellIndicator.transform.position = grid.CellToWorld(gridPosition);
     }
 
 }

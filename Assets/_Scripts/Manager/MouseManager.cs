@@ -100,7 +100,7 @@ namespace StarterAssets
                 if(gameState == GameState.Builder)
                 {
                     lastPositiom = hit.point;
-                    return SwitchList(hit.collider.tag, hit.point, hit);
+                    return lastPositiom;
                 }
             }
             return new Vector3(0,0,0);//Es null
@@ -126,6 +126,7 @@ namespace StarterAssets
                         }
                     return pos;
                 case "Terrain":
+
                     return pos;
                 default:
                     return pos;
