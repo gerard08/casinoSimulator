@@ -27,17 +27,16 @@ public class TabletManager : MonoBehaviour
         TabletPanel.SetActive(state == GameState.Tablet);
     }
 
-    public void spawnObject1()
+    public void spawnObject(int ID)
     {
-        //ObjectManager.Instance.SpawnObjects(1);
-        TabletPanel.SetActive(false);
-        GameManager.Instance.UpdateGameState(GameState.Play);
-    }
-
-    public void spawnObject2()
-    {
-       // ObjectManager.Instance.SpawnObjects(2);
+        ObjectManager.Instance.SpawnObjects(ID);
+        if (ID < 0)
+        {
+            Debug.Log($"No ID found {ID}");
+            return;
+        }
         TabletPanel.SetActive(false);
         GameManager.Instance.UpdateGameState(GameState.Builder);
     }
+
 }

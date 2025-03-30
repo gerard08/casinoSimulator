@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 493750bddecfe8b4a962b967ee4461ed, type: 3}
-  m_Name: MaquinaCasino
+  m_Name: Table
   m_EditorClassIdentifier: 
   objectType: 2
   stateObject: 0
   _stats:
-    ID: 1
+    ID: 2
     <price>k__BackingField: 0
-    <Size>k__BackingField: {x: 1, y: 1}
-    <Prefab>k__BackingField: {fileID: 3648101314650458475, guid: 4523834b3821f8a4383b530e0359eee9, type: 3}
-  _Objects: {fileID: 2103320967868182934, guid: 4523834b3821f8a4383b530e0359eee9, type: 3}
+    <Size>k__BackingField: {x: 2, y: 1}
+    <Prefab>k__BackingField: {fileID: 737788134709776632, guid: 1215a89c5bb3f754daf6a61a6d492ea6, type: 3}
+  _Objects: {fileID: 3141689590787134130, guid: 1215a89c5bb3f754daf6a61a6d492ea6, type: 3}
   Description: 
   MenuSprite: {fileID: 0}

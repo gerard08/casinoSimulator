@@ -20,7 +20,7 @@ public class Objects : ObjectsBase, IInteractable
 
     private void Start()
     {
-        outline = GetComponent<MeshRenderer>().materials[1];
+        /*outline = GetComponent<MeshRenderer>().materials[1];
 
         boxCollider = GetComponent<BoxCollider>();
 
@@ -29,7 +29,7 @@ public class Objects : ObjectsBase, IInteractable
         if (_objectType == ObjectType.Environment) {rb.constraints = RigidbodyConstraints.FreezeAll; }
         else if (_objectType == ObjectType.Interactuable || _objectType == ObjectType.Builder) { rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.None; }
 
-        //stateObject = ObjectState.NoTaked;
+        //stateObject = ObjectState.NoTaked;*/
     }
     void Awake()
     {

@@ -9,6 +9,8 @@ public class ObjectManager : Singleton<ObjectManager>
 {
     [SerializeField] private GameObject positionBuilder;
 
+    [SerializeField] public GameObject lastObject;
+
     public List<ObjectType> builderObjects { get; private set; }
 
     //Aqui se spawnea el objeto a partir de una ID + la posicion
@@ -22,9 +24,11 @@ public class ObjectManager : Singleton<ObjectManager>
     {
         var _objectScripteable = ResourceSystem.Instance.GetObject(id);
 
-        var spawned = Instantiate(_objectScripteable.prefab, pos, Quaternion.identity, transform);
+        var spawned = Instantiate(_objectScripteable._Objects, pos, Quaternion.identity, transform);
 
         var stats = _objectScripteable.BaseStats;
+
+        lastObject = spawned.gameObject;
 
         var statsObject = _objectScripteable.stateObject;
 
@@ -37,23 +41,9 @@ public class ObjectManager : Singleton<ObjectManager>
         spawned.SetObjectType(statsType);
     }
 
-    public GameObject SeacrhObj()
+    public GameObject GetObj()
     {
-        GameObject[] objetos = GameObject.FindGameObjectsWithTag("Environment");
-
-        Debug.Log(objetos);
-
-        foreach (GameObject obj in objetos)
-        {
-
-            Objects _objetos = GetComponent<Objects>();
-            if(_objetos.IsBuilder())
-            {
-                return obj;
-            }
-        }
-
-        return null;
+        return lastObject;
     }
 
 }

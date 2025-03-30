@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 493750bddecfe8b4a962b967ee4461ed, type: 3}
   m_Name: CuboROJO
   m_EditorClassIdentifier: 
+  objectType: 0
   stateObject: 0
   _stats:
-    id: 1
-    price: 20
-  prefab: {fileID: 2103320967868182934, guid: b04a40c5dbc6381448900a4247a8e8be, type: 3}
+    ID: 3
+    <price>k__BackingField: 0
+    <Size>k__BackingField: {x: 0, y: 0}
+    <Prefab>k__BackingField: {fileID: 0}
+  _Objects: {fileID: 2103320967868182934, guid: b04a40c5dbc6381448900a4247a8e8be, type: 3}
   Description: 
   MenuSprite: {fileID: 0}

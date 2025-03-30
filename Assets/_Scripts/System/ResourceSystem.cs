@@ -18,8 +18,8 @@ public class ResourceSystem : Singleton<ResourceSystem>
     private void AssembleResources()
     {
         scripteableObjects = Resources.LoadAll<ScripteableObject>("Objects").ToList();
-        _ObjectType = scripteableObjects.ToDictionary(r => r.objectType, r => r);
-        _ObjectID = scripteableObjects.ToDictionary(r => r.BaseStats.id, r => r);
+        //_ObjectType = scripteableObjects.ToDictionary(r => r.objectType, r => r);
+        _ObjectID = scripteableObjects.ToDictionary(r => r.BaseStats.ID, r => r);
     }
 
     public ScripteableObject GetObject(ObjectType _objectType) => _ObjectType[_objectType];

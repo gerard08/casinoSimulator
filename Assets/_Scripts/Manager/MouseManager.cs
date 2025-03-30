@@ -1,6 +1,7 @@
 using System;
 using System.Xml.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -24,7 +25,7 @@ namespace StarterAssets
         //Raycast//
         public Camera mainCamera;
         float distanceMax = 5; //Distancia del Raycast al impactar un objeto
-
+        [SerializeField] private LayerMask placementLayerMask;
         [SerializeField] private IInteractable interactObj;
 
         //TakeObj//
@@ -39,6 +40,8 @@ namespace StarterAssets
 
         //Builder
         Vector3 lastPositiom;
+        public event Action OnClicked,OnExit;
+
         void Awake()
         {
             GameManager.StateChanged += GameManager_StateChanged;
@@ -61,6 +64,11 @@ namespace StarterAssets
             if (gameState == GameState.Play || gameState == GameState.Builder)
             {
                 if (objectSelect) { ObjectMove(); }
+                if (gameState == GameState.Builder)
+                {
+                    if (Input.GetMouseButtonDown(0)) OnClicked?.Invoke();
+                    if (Input.GetKeyDown(KeyCode.Escape)) { OnExit?.Invoke(); GameManager.Instance.UpdateGameState(GameState.Play); }
+                }
                 CheckRayCast();
                 if (objectSelect)
                     distanceMax = Mathf.Infinity;
@@ -75,16 +83,22 @@ namespace StarterAssets
             Vector3 mousePos = Input.mousePosition;
             mousePos.z = mainCamera.nearClipPlane;
             Ray ray = mainCamera.ScreenPointToRay(mousePos);
-            if (Physics.Raycast(ray, out hit, distanceMax, LayerMask.NameToLayer("NoInteractable")))
+            if (Physics.Raycast(ray, out hit, distanceMax, placementLayerMask))
             {
                 if (objectSelect && Input.GetMouseButtonDown(0))
                 {
                     if (interactObj.IsTaked())
                     {
                         throwObject();
+                        return new Vector3(0, 0, 0);
                     }
                 }
-                if (hit.collider.gameObject.TryGetComponent(out IInteractable prob))
+                if (gameState == GameState.Builder)
+                {
+                    lastPositiom = hit.point;
+                    return lastPositiom;
+                }
+                if (hit.collider.gameObject.TryGetComponent(out IInteractable prob) && gameState == GameState.Play)
                 {
                     interactObj = prob;
                     interactObj.Outline();
@@ -92,25 +106,23 @@ namespace StarterAssets
                     {
                         SwitchList(hit.collider.tag, hit.point, hit);
                     }
+                    return new Vector3(0, 0, 0);
                 }
                 else if (interactObj != null)
                 {
                     interactObj.NotOutline();
                 }
-                if(gameState == GameState.Builder)
-                {
-                    lastPositiom = hit.point;
-                    return lastPositiom;
-                }
             }
             return new Vector3(0,0,0);//Es null
         }
 
-            void ObjectMove()
-            {
-                Vector3 newPosition2 = Vector3.Lerp(objectHand.transform.position, poisitionHand.transform.position, Time.deltaTime * 50);
-                objectHand.transform.position = newPosition2;
-            }
+        public bool IsPointerOverUI() => EventSystem.current.IsPointerOverGameObject();
+
+        void ObjectMove()
+        {
+            Vector3 newPosition2 = Vector3.Lerp(objectHand.transform.position, poisitionHand.transform.position, Time.deltaTime * 50);
+            objectHand.transform.position = newPosition2;
+        }
 
             public Vector3 SwitchList(string _tag, Vector3 pos, RaycastHit hit)
             {
