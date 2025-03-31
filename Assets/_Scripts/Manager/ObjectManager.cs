@@ -24,7 +24,7 @@ public class ObjectManager : Singleton<ObjectManager>
     {
         var _objectScripteable = ResourceSystem.Instance.GetObject(id);
 
-        var spawned = Instantiate(_objectScripteable._Objects, pos, Quaternion.identity, transform);
+        var spawned = Instantiate(_objectScripteable._Objects, pos, Quaternion.identity);
 
         var stats = _objectScripteable.BaseStats;
 
@@ -44,6 +44,11 @@ public class ObjectManager : Singleton<ObjectManager>
     public GameObject GetObj()
     {
         return lastObject;
+    }
+
+    public void SetVisibilityObj(bool _bool)
+    {
+        lastObject.SetActive(_bool);
     }
 
 }
