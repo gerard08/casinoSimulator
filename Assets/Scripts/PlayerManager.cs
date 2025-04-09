@@ -4,11 +4,13 @@ using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using Benchmarking;
 using UnityEngine.EventSystems;
+using Unity.Netcode;
+using StarterAssets;
 
 /// <summary>
 /// This class will enable the touch input canvas on handheld devices and will trigger the camera flythrough if the player is idle
 /// </summary>
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : NetworkBehaviour
 {
     [SerializeField] private bool m_FlythroughWhenIdle;
     [SerializeField] private float m_IdleTransitionTime;
@@ -21,9 +23,9 @@ public class PlayerManager : MonoBehaviour
     private bool m_InFlythrough;
     private float m_TimeIdle;
     private CinemachineCamera m_VirtualCamera;
+    private Camera m_MainCamera;
+    private FirstPersonController m_FirstPersonController;
     private bool m_HasFocus;
-
-
     
     void Start()
     {
@@ -45,8 +47,28 @@ public class PlayerManager : MonoBehaviour
             m_TouchInputCanvas.SetActive(true);
             
         }
+    }
 
-        m_VirtualCamera = GetComponentInChildren<CinemachineCamera>();
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner)
+        {
+            m_VirtualCamera = GetComponentInChildren<CinemachineCamera>();
+            m_MainCamera = GetComponentInChildren<Camera>();
+            m_FirstPersonController = GetComponentInChildren<FirstPersonController>();
+
+            // Disable the camera on remote player instances
+            if (m_VirtualCamera != null)
+            {
+                m_VirtualCamera.gameObject.SetActive(false);
+                m_VirtualCamera.enabled = false;
+                m_MainCamera.gameObject.SetActive(false);
+                m_MainCamera.enabled = false;
+            }
+
+            m_FirstPersonController.enabled = false;
+            this.enabled = false;
+        }
     }
 
     void Update()
