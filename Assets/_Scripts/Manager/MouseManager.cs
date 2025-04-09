@@ -63,14 +63,15 @@ namespace StarterAssets
         }
         void Update()
         {
-            if (gameState != GameState.Tablet)
+            if (gameState != GameState.Tablet || gameState != GameState.Menu)
             {
-                if (objectSelect) { ObjectMove(); }
+                if (objectSelect) { /*ObjectMove();*/ }
                 if (gameState != GameState.Play)
                 {
                     if (Input.GetMouseButtonDown(0)) OnClicked?.Invoke();
                     if (Input.GetKeyDown(KeyCode.Escape)) { OnExit?.Invoke(); GameManager.Instance.UpdateGameState(GameState.Play); }
                 }
+                else
                 CheckRayCast();
                 if (objectSelect)
                     distanceMax = Mathf.Infinity;
@@ -83,6 +84,8 @@ namespace StarterAssets
         {
             RaycastHit hit;
             Vector3 mousePos = Input.mousePosition;
+            if(mainCamera == null)
+                mainCamera = Camera.main;
             mousePos.z = mainCamera.nearClipPlane;
             Ray ray = mainCamera.ScreenPointToRay(mousePos);
             if (Physics.Raycast(ray, out hit, distanceMax))

@@ -74,12 +74,14 @@ public class PreviewSystem : MonoBehaviour
 
     private void ApplyFeedBackToPreview(bool validity)
     {
+        Debug.Log(validity);
         Color c = validity ? Color.white : Color.red;
         c.a = 0.5f;
         previewMaterialInstance.color = c;
     }
     private void ApplyFeedBackToCursor(bool validity)
     {
+        Debug.Log(validity);
         Color c = validity ? Color.white : Color.red;
         c.a = 0.5f;
         cellIndicatorRenderer.material.color = c;

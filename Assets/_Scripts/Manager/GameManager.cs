@@ -10,7 +10,7 @@ public class GameManager : Singleton<GameManager>
     //Ideas hacer 2 eventos uno antes de cambiar el state y otro despues de cambiar el state
     public static event Action<GameState> StateChanged;
 
-    void Start() => UpdateGameState(GameState.Play); //Solo al iniciar se actualiza el state
+    void Start() => UpdateGameState(GameState.Menu); //Solo al iniciar se actualiza el state
 
 
     // Update is called once per frame
