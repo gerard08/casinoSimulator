@@ -20,11 +20,9 @@ public class Objects : ObjectsBase, IInteractable
 
     private void Start()
     {
-        /*outline = GetComponent<MeshRenderer>().materials[1];
+        outline = GetComponent<MeshRenderer>().materials[1];
 
-        boxCollider = GetComponent<BoxCollider>();
-
-        rb = GetComponent<Rigidbody>();
+        /*rb = GetComponent<Rigidbody>();
 
         if (_objectType == ObjectType.Environment) {rb.constraints = RigidbodyConstraints.FreezeAll; }
         else if (_objectType == ObjectType.Interactuable || _objectType == ObjectType.Builder) { rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.None; }
@@ -34,53 +32,72 @@ public class Objects : ObjectsBase, IInteractable
     void Awake()
     {
         GameManager.StateChanged += GameManager_StateChanged;
+        ObjectPlace();
     }
 
-    void OnDestroy() //Buena practis quitar el evento del buffer 
+    public void OnDestroy() //Buena practis quitar el evento del buffer 
     {
         GameManager.StateChanged -= GameManager_StateChanged;
     }
 
     private void GameManager_StateChanged(GameState state)
     {
-        if(state != GameState.Play) { //stateObject = ObjectState.NoTaked
-                                      ;}
+        if(state == GameState.Remove) 
+        { 
+            if (_objectType == ObjectType.Environment)
+            {
+                boxCollider.GetComponent<BoxCollider>().enabled = true;
+            }
+        }
     }
     public override void Outline() {
-
+        if(_objectType == ObjectType.Interactuable)
         outline.SetFloat("_Outline_Thickness", scale);
+    }
+    
+    public override void ObjectPlace()
+    {
+        if (_objectType == ObjectType.Environment)
+        {
+            boxCollider = GetComponent<BoxCollider>();
+            boxCollider.GetComponent<BoxCollider>().enabled = true;
+        }
+        else if (_objectType == ObjectType.Builder)
+            boxCollider.GetComponent<BoxCollider>().enabled = false;
     }
 
     public override void NotOutline()
     {
-
-        outline.SetFloat("_Outline_Thickness", Noscale);
+        if (_objectType == ObjectType.Interactuable)
+            outline.SetFloat("_Outline_Thickness", Noscale);
     }
 
     public override void ObjectNoTaked()
     {
-
-        boxCollider.enabled = true;
-        rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.None;
-        outline.SetFloat("_Outline_Thickness", 0.01f);
-        SetObjectState(ObjectState.NoTaked);
-        Debug.Log(_objectState);
+        if (_objectType == ObjectType.Interactuable)
+        {
+            boxCollider.enabled = true;
+            rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.None;
+            outline.SetFloat("_Outline_Thickness", 0.01f);
+            SetObjectState(ObjectState.NoTaked);
+        }    
     }
 
     public override void ObjectTaked()
     {
-        boxCollider.enabled = false;
-        transform.rotation = Quaternion.Euler(0, 0, 0);
-        rb.constraints = RigidbodyConstraints.FreezeAll;
-        SetObjectState(ObjectState.Taked);
-        Debug.Log(_objectState);
-
+        if (_objectType == ObjectType.Interactuable)
+        {
+            boxCollider.enabled = false;
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+            rb.constraints = RigidbodyConstraints.FreezeAll;
+            SetObjectState(ObjectState.Taked);
+        }
     }
 
-    public Vector3 objectHost()
+    /*public Vector3 objectHost()
     {
         Vector3 vector3 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         return vector3;
-    }
+    }*/
 
 }

@@ -134,7 +134,9 @@ namespace StarterAssets
 			GroundedCheck();
 			Move();
 			Tablet();
-		}
+			Remove();
+
+        }
 
 
 		private void Tablet()
@@ -150,10 +152,23 @@ namespace StarterAssets
             {
                 _input.cursorLocked = true;
                 _input.cursorInputForLook = true;
-				if(_gameState != GameState.Builder)
+				if(_gameState == GameState.Tablet)
                 GameManager.Instance.UpdateGameState(GameState.Play);
             }
 
+        }
+
+        private void Remove()
+        {
+			if (_input.remove)
+			{
+                GameManager.Instance.UpdateGameState(GameState.Remove);
+            }
+            else if (!_input.tablet)
+            {
+                if (_gameState == GameState.Remove)
+                    GameManager.Instance.UpdateGameState(GameState.Play);
+            }
         }
         private void LateUpdate()
 		{

@@ -17,7 +17,6 @@ interface IInteractable
 
     bool IsTaked();
 }
-
 namespace StarterAssets
 {
     public class MouseManager : MonoBehaviour
@@ -27,7 +26,8 @@ namespace StarterAssets
         float distanceMax = 5; //Distancia del Raycast al impactar un objeto
         [SerializeField] private LayerMask placementLayerMask;
         [SerializeField] private IInteractable interactObj;
-
+        [SerializeField] private IBuildingState interactObjRemove;
+        [SerializeField] private PreviewSystem preview;
         //TakeObj//
         public bool objectSelect; //bool para saber si hay algun objeto en la mano
         [SerializeField]
@@ -39,7 +39,9 @@ namespace StarterAssets
         private GameState gameState;
 
         //Builder
-        Vector3 lastPositiom;
+        Vector3 lastPosition;
+        private bool isRemove;
+
         public event Action OnClicked,OnExit;
 
         void Awake()
@@ -61,10 +63,10 @@ namespace StarterAssets
         }
         void Update()
         {
-            if (gameState == GameState.Play || gameState == GameState.Builder)
+            if (gameState != GameState.Tablet)
             {
                 if (objectSelect) { ObjectMove(); }
-                if (gameState == GameState.Builder)
+                if (gameState != GameState.Play)
                 {
                     if (Input.GetMouseButtonDown(0)) OnClicked?.Invoke();
                     if (Input.GetKeyDown(KeyCode.Escape)) { OnExit?.Invoke(); GameManager.Instance.UpdateGameState(GameState.Play); }
@@ -83,37 +85,30 @@ namespace StarterAssets
             Vector3 mousePos = Input.mousePosition;
             mousePos.z = mainCamera.nearClipPlane;
             Ray ray = mainCamera.ScreenPointToRay(mousePos);
-            if (Physics.Raycast(ray, out hit, distanceMax, placementLayerMask))
+            if (Physics.Raycast(ray, out hit, distanceMax))
             {
-                if (objectSelect && Input.GetMouseButtonDown(0))
+                if (objectSelect && Input.GetMouseButtonDown(0)) //Dejar caer el objeto que llevas cogido
                 {
                     if (interactObj.IsTaked())
                     {
                         throwObject();
-                        return new Vector3(0, 0, 0);
+                        return new Vector3(0, -2, 0);
                     }
                 }
-                if (gameState == GameState.Builder)
+                if (gameState == GameState.Builder || gameState == GameState.Remove) //builder
                 {
-                    lastPositiom = hit.point;
-                    return lastPositiom;
+                    lastPosition = hit.point;
+                    SwitchList(hit.collider.tag, lastPosition, hit);
+                    return lastPosition;
                 }
-                if (hit.collider.gameObject.TryGetComponent(out IInteractable prob) && gameState == GameState.Play)
+                if (hit.collider.gameObject.TryGetComponent(out IInteractable prob) && gameState == GameState.Play) //Coger objetos
                 {
                     interactObj = prob;
-                    interactObj.Outline();
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        SwitchList(hit.collider.tag, hit.point, hit);
-                    }
-                    return new Vector3(0, 0, 0);
+                    return new Vector3(0, -2, 0);
                 }
-                else if (interactObj != null)
-                {
-                    interactObj.NotOutline();
-                }
+                SwitchList(hit.collider.tag, hit.point, hit);
             }
-            return new Vector3(0,0,0);//Es null
+            return new Vector3(0, -2, 0);//Es null
         }
 
         public bool IsPointerOverUI() => EventSystem.current.IsPointerOverGameObject();
@@ -124,32 +119,50 @@ namespace StarterAssets
             objectHand.transform.position = newPosition2;
         }
 
-            public Vector3 SwitchList(string _tag, Vector3 pos, RaycastHit hit)
+        public void SwitchList(string _tag, Vector3 pos, RaycastHit hit)
+        {
+            switch (_tag)
             {
-                switch (_tag)
+            case "Interacteable":
+                interactObj.Outline();
+                if (Input.GetMouseButtonDown(0))
                 {
-                    case "Interacteable":
-                        if (!objectSelect && !interactObj.IsTaked())
-                        {
-                            objectHand = hit.collider.gameObject;
-                            interactObj.NotOutline();
-                            interactObj.ObjectTaked();
-                            objectSelect = true;
-                        }
-                    return pos;
-                case "Terrain":
-
-                    return pos;
-                default:
-                    return pos;
+                    SelectObject(hit.collider.gameObject);
                 }
+                break;
+            case "Environment":
+                if (gameState == GameState.Remove)
+                {
+                        Debug.Log("!");
+                    preview.ShowPreviewObjRemove(hit.collider.gameObject);
+                    isRemove = true;
+                }
+                break;
+            default:
+                if (interactObj != null)
+                    interactObj.NotOutline();
+                if(isRemove)
+                {
+                    //preview.StopPreviewObjRemove(hit.collider.gameObject);
+                    //isRemove = false;
+                }
+                break;
             }
-            void throwObject()
-            {
-                interactObj.ObjectNoTaked();
-                objectSelect = false;
-                objectHand = null;
-                interactObj = null;
-            }
+        }
+        void throwObject()
+        {
+            interactObj.ObjectNoTaked();
+            objectSelect = false;
+            objectHand = null;
+            interactObj = null;
+        }
+
+        void SelectObject(GameObject gameObject)
+        {
+            objectHand = gameObject;
+            interactObj.NotOutline();
+            interactObj.ObjectTaked();
+            objectSelect = true;
+        }
     }
 }

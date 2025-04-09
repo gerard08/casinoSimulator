@@ -16,8 +16,8 @@ namespace StarterAssets
 		public bool sprint;
         [SerializeField]
         public bool tablet { get; private set; }
-
-		private InputAction _tabletOpenCloseAction;
+        public bool remove { get; private set; }
+        private InputAction _tabletOpenCloseAction;
 
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
@@ -133,6 +133,19 @@ namespace StarterAssets
                 TabletInput(tablet);
             }
         }
+        public void OnRemove(InputValue value)
+        {
+            if (CameraManager != null)
+            {
+                CameraManager.NotifyPlayerMoved();
+            }
+            if (value.isPressed)
+            {
+				Debug.Log("Remove");
+                remove = !remove;
+                RemoveInput(remove);
+            }
+        }
         public void OnSprint(InputValue value)
 		{
 			if (CameraManager != null)
@@ -169,7 +182,10 @@ namespace StarterAssets
 			SetCursorState(!newSprintState);
             tablet = newSprintState;
         }
-
+        public void RemoveInput(bool newSprintState)
+        {
+            remove = newSprintState;
+        }
         private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);

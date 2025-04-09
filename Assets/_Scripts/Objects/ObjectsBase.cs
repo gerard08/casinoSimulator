@@ -19,7 +19,8 @@ public class ObjectsBase : MonoBehaviour
     public virtual void ObjectTaked() { }
     public virtual void Outline() { }
     public virtual void NotOutline() { }
+    public virtual void ObjectPlace() { }
     public virtual bool IsTaked() { if(_objectState == ObjectState.Taked) return true; return false; }
-    public virtual bool IsBuilder() { Debug.Log("!"); if(_objectType == ObjectType.Builder) return true; return false; }
+    public virtual bool IsBuilder() { if(_objectType == ObjectType.Builder) return true; return false; }
 
 }

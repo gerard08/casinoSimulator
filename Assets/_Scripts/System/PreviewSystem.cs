@@ -1,10 +1,9 @@
-using System;
 using UnityEngine;
 
 public class PreviewSystem : MonoBehaviour
 {
     [SerializeField]
-    private float previewYOffset = 0.06f;
+    private float previewYOffset = 0.2f;
 
     [SerializeField]
     private GameObject cellIndicator;
@@ -58,24 +57,33 @@ public class PreviewSystem : MonoBehaviour
     public void StopShowingPreview()
     {
         cellIndicator.SetActive(false);
-        Destroy(previewObject);
+        if(previewObject != null)
+            Destroy(previewObject);
     }
 
     public void UpdatePosition(Vector3 position, bool validity)
     {
-        MovePreview(position);
+        if(previewObject != null)
+        {
+            MovePreview(position);
+            ApplyFeedBackToPreview(validity);
+        }
         MoveCursor(position);
-        ApplyFeedBack(validity);
+        ApplyFeedBackToCursor(validity);
     }
 
-    private void ApplyFeedBack(bool validity)
+    private void ApplyFeedBackToPreview(bool validity)
+    {
+        Color c = validity ? Color.white : Color.red;
+        c.a = 0.5f;
+        previewMaterialInstance.color = c;
+    }
+    private void ApplyFeedBackToCursor(bool validity)
     {
         Color c = validity ? Color.white : Color.red;
         c.a = 0.5f;
         cellIndicatorRenderer.material.color = c;
-        previewMaterialInstance.color = c;
     }
-
     private void MoveCursor(Vector3 position)
     {
         cellIndicator.transform.position = position;
@@ -87,5 +95,25 @@ public class PreviewSystem : MonoBehaviour
             position.x,
             position.y + previewYOffset,
             position.z);
+    }
+
+    internal void StartShowingRemovePreview()
+    {
+        cellIndicator.SetActive(true);
+        PrepareCursor(Vector2Int.one);
+        ApplyFeedBackToCursor(false);
+    }
+    public void ShowPreviewObjRemove(GameObject prefab)
+    {
+        PreparePreavie(prefab);
+        ApplyFeedBackToPreview(false);
+    }
+    public void StopPreviewObjRemove(GameObject prefab)
+    {
+
+    }
+    public void DestroyObj(GameObject gameObject)
+    {
+        Destroy(gameObject);
     }
 }

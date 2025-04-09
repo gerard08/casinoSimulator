@@ -32,6 +32,9 @@ public class GameManager : Singleton<GameManager>
             case GameState.Builder:
                 Debug.Log("State Builder");
                 break;
+            case GameState.Remove:
+                Debug.Log("State Remove");
+                break;
             case GameState.Exit:
                 break;
             default:
@@ -50,5 +53,6 @@ public enum GameState
     Play,
     Tablet,
     Builder,
+    Remove,
     Exit
 }

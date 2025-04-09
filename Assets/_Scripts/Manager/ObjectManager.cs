@@ -1,5 +1,6 @@
 using StarterAssets;
 using System.Collections.Generic;
+using System.Security.AccessControl;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -11,6 +12,7 @@ public class ObjectManager : Singleton<ObjectManager>
 
     [SerializeField] public GameObject lastObject;
 
+    Objects _LastObjectsScript;
     public List<ObjectType> builderObjects { get; private set; }
 
     //Aqui se spawnea el objeto a partir de una ID + la posicion
@@ -30,6 +32,8 @@ public class ObjectManager : Singleton<ObjectManager>
 
         lastObject = spawned.gameObject;
 
+        _LastObjectsScript = spawned;
+
         var statsObject = _objectScripteable.stateObject;
 
         var statsType = _objectScripteable.objectType;
@@ -46,11 +50,11 @@ public class ObjectManager : Singleton<ObjectManager>
         return lastObject;
     }
 
-    public void SetVisibilityObj(bool _bool)
+    public void SetObjType()
     {
-        lastObject.SetActive(_bool);
+        _LastObjectsScript.SetObjectType(ObjectType.Environment);
+        _LastObjectsScript.ObjectPlace();
     }
-
 }
 
 
