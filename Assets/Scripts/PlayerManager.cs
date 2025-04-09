@@ -51,7 +51,6 @@ public class PlayerManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        Debug.Log(IsOwner);
         if (!IsOwner)
         {
             m_VirtualCamera = GetComponentInChildren<CinemachineCamera>();
